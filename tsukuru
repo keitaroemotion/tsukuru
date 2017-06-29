@@ -16,6 +16,7 @@ when "-h"
   puts "tsukuru -h ... help menu"
   puts "tsukuru -n [path/to/?/make] arg1 arg2 argn ... to make files"
   puts "tsukuru -mv [new name] [path/from/?/move] arg1 arg2 argn ... to rename files"
+  puts
 when "-n"
   files.each do |file|
     system "mkdir -p #{File.dirname(file)}"
@@ -28,6 +29,7 @@ when "-mv"
     system "mv #{file} #{File.join(File.dirname(file), $values[0])}"
   end
 else
+  abort "\nyou need argument\n\n"
 end
 
 # puts Regexp.new(regex)
