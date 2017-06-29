@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+$values = ARGV.select {|arg| /^[^\-]/.match(arg) }
+$opts   = ARGV.select {|arg| !/^[^\-]/.match(arg) }
+
+
+def files(i = 1)
+  regex  = "#{$values[i-1]}"
+  args   = $values[i..-1]
+  args.map { |arg| regex.gsub("?", arg) }
+end  
+
+case $opts.first
+when "-h"
+  puts
+  puts "tsukuru -h ... help menu"
+  puts "tsukuru -n [path/to/?/make] arg1 arg2 argn ... to make files"
+  puts "tsukuru -mv [new name] [path/from/?/move] arg1 arg2 argn ... to rename files"
+when "-n"
+  files.each do |file|
+    system "mkdir -p #{File.dirname(file)}"
+    puts   "touch #{file}"
+    system "touch #{file}"
+  end
+when "-mv"  
+  files(2).each do |file|
+    puts   "mv #{file} #{File.join(File.dirname(file), $values[0])}"
+    system "mv #{file} #{File.join(File.dirname(file), $values[0])}"
+  end
+else
+end
+
+# puts Regexp.new(regex)
