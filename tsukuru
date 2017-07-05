@@ -3,10 +3,12 @@
 $values = ARGV.select {|arg| /^[^\-]/.match(arg) }
 $opts   = ARGV.select {|arg| !/^[^\-]/.match(arg) }
 
-
 def files(i = 1)
   regex  = "#{$values[i-1]}"
   args   = $values[i..-1]
+  if args.size == 0
+    abort "you need replacement args"
+  end
   args.map { |arg| regex.gsub("?", arg) }
 end  
 
@@ -24,12 +26,16 @@ when "-n"
     system "touch #{file}"
   end
 when "-mv"  
+  if $values.size == 2
+    system "mv #{$values[1]} #{File.join(File.dirname($values[1]), $values[0])}"
+    abort
+  end
   files(2).each do |file|
     puts   "mv #{file} #{File.join(File.dirname(file), $values[0])}"
     system "mv #{file} #{File.join(File.dirname(file), $values[0])}"
   end
 else
-  abort "\nyou need argument\n\n"
+  abort "argument please\n\n"
 end
 
 # puts Regexp.new(regex)
